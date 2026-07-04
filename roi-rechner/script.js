@@ -316,8 +316,7 @@ renderCalc(activeCalc);
 
 // ---------- Knowledge-Base Opt-in ----------
 
-// TODO: Apps-Script-Web-App-URL eintragen, sobald deployed (endet auf /exec)
-const KB_WEBHOOK_URL = 'PASTE_APPS_SCRIPT_URL_HERE';
+const KB_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxxQ4sAikTmFebbJFCN9A6O8jAAkIIMXg4R7qSOlnHPcrDvdPNE_zVSeS15otYwnNfP/exec';
 const KB_NOTION_URL = 'https://towering-piano-a3a.notion.site/Optimierungs-Sheet-f-r-Workshops-Webinare-7dd961cf9e1744c7b50d8f29b424ab4e';
 
 const kbUnlockBtn = document.getElementById('kb-unlock-btn');
