@@ -317,7 +317,7 @@ renderCalc(activeCalc);
 // ---------- Knowledge-Base Opt-in ----------
 
 const KB_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxxQ4sAikTmFebbJFCN9A6O8jAAkIIMXg4R7qSOlnHPcrDvdPNE_zVSeS15otYwnNfP/exec';
-const KB_NOTION_URL = 'https://towering-piano-a3a.notion.site/Optimierungs-Sheet-f-r-Workshops-Webinare-7dd961cf9e1744c7b50d8f29b424ab4e';
+const KB_DESTINATION_URL = '/roi-rechner/optimierung';
 
 const kbUnlockBtn = document.getElementById('kb-unlock-btn');
 const kbModalOverlay = document.getElementById('kb-modal-overlay');
@@ -361,10 +361,6 @@ kbForm.addEventListener('submit', (e) => {
   })
     .catch(() => {}) // Apps Script liefert bei "Anyone"-Deploys oft keine auswertbare Antwort – wir vertrauen auf den Request statt die Response zu prüfen.
     .finally(() => {
-      window.open(KB_NOTION_URL, '_blank', 'noopener');
-      closeKbModal();
-      kbSubmitBtn.disabled = false;
-      kbSubmitBtn.textContent = 'Freischalten →';
-      kbForm.reset();
+      window.location.href = KB_DESTINATION_URL;
     });
 });
