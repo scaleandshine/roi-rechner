@@ -1,4 +1,4 @@
-// ROI-Rechner — Workshop & Webinar (mit Terminen / mit Bestellformular)
+// ROI-Rechner: Workshop & Webinar (mit Terminen / mit Bestellformular)
 // Formellogik 1:1 aus dem Google-Sheet "ROI-Rechner - VORLAGE" übernommen.
 
 const fmtCurrency = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
@@ -8,24 +8,32 @@ const fmtPercent = (v) => `${(v * 100).toLocaleString('de-DE', { maximumFraction
 
 function round(n) { return Math.round(n); }
 
+function escapeAttr(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function infoBtn(tip) {
+  return `<button type="button" class="fg-info-btn" data-tip="${escapeAttr(tip)}" aria-label="Erklärung">i</button>`;
+}
+
 const CALCULATORS = {
   workshop: {
     title: 'Workshop-Rechner',
     subtitle: 'High-Ticket-Sales (mind. 2 Tage)',
     fields: [
-      { key: 'productPrice', label: 'Produkt-Preis (netto)', unit: '€', default: 4000 },
-      { key: 'erfolgspaketPrice', label: 'Erfolgspaket-Preis (netto)', unit: '€', default: 19.95, step: 0.05 },
-      { key: 'adSpend', label: 'Ad-Spend', unit: '€', default: 2000 },
-      { key: 'leadPrice', label: 'Lead-Preis', unit: '€', default: 15, step: 0.5 },
-      { key: 'organicLeads', label: 'Organische Leads', unit: 'Leads', default: 100 },
-      { key: 'otherProductRevenue', label: 'Umsatz Verkäufe anderes Produkt', unit: '€', default: 0 },
+      { key: 'productPrice', label: 'Produkt-Preis (netto)', unit: '€', default: 4000, help: 'Der Netto-Verkaufspreis deines Haupt-Angebots (ohne MwSt.).' },
+      { key: 'erfolgspaketPrice', label: 'Erfolgspaket-Preis (netto)', unit: '€', default: 19.95, step: 0.05, help: 'Preis für ein kleines Zusatzprodukt, das während des Workshops verkauft wird (z. B. Workbook, Action-Plan).' },
+      { key: 'adSpend', label: 'Ad-Spend', unit: '€', default: 2000, help: 'Dein gesamtes Werbebudget für diesen Workshop (z. B. Meta oder Google Ads).' },
+      { key: 'leadPrice', label: 'Lead-Preis', unit: '€', default: 15, step: 0.5, help: 'Was dich eine einzelne Anmeldung (Lead) im Schnitt kostet.' },
+      { key: 'organicLeads', label: 'Organische Leads', unit: 'Leads', default: 100, help: 'Anmeldungen ohne bezahlte Werbung, z. B. über E-Mail-Liste, Social Media oder Empfehlungen.' },
+      { key: 'otherProductRevenue', label: 'Umsatz Verkäufe anderes Produkt', unit: '€', default: 0, help: 'Zusätzlicher Umsatz durch ein weiteres Produkt während des Workshops. Falls nicht relevant, einfach bei 0 lassen.' },
     ],
     rates: [
-      { key: 'showUpRateDay1', label: 'Show-Up Rate Tag 1', default: 0.25, benchmark: 0.25 },
-      { key: 'showUpRateDay2', label: 'Show-Up Rate Tag 2', default: 0.20, benchmark: 0.20 },
-      { key: 'termineRate', label: 'Terminquote (nach Tag 2)', default: 0.075, benchmark: 0.10 },
-      { key: 'salesRate', label: 'Abschlussquote (Termin → Sale)', default: 0.70, benchmark: 0.80 },
-      { key: 'erfolgspaketRate', label: 'Erfolgspaket-Kaufquote', default: 0.10, benchmark: 0.10 },
+      { key: 'showUpRateDay1', label: 'Show-Up Rate Tag 1', default: 0.25, benchmark: 0.25, help: 'Wie viel Prozent der angemeldeten Leads am ersten Workshop-Tag tatsächlich teilnehmen.' },
+      { key: 'showUpRateDay2', label: 'Show-Up Rate Tag 2', default: 0.20, benchmark: 0.20, help: 'Wie viel Prozent der angemeldeten Leads am zweiten Workshop-Tag tatsächlich teilnehmen.' },
+      { key: 'termineRate', label: 'Terminquote (nach Tag 2)', default: 0.075, benchmark: 0.10, help: 'Wie viel Prozent der Teilnehmer von Tag 2 sich anschließend für ein Beratungsgespräch eintragen.' },
+      { key: 'salesRate', label: 'Abschlussquote (Termin → Sale)', default: 0.70, benchmark: 0.80, help: 'Wie viel Prozent der geführten Beratungsgespräche zu einem Kauf des Hauptangebots führen.' },
+      { key: 'erfolgspaketRate', label: 'Erfolgspaket-Kaufquote', default: 0.10, benchmark: 0.10, help: 'Wie viel Prozent aller Leads das kleine Zusatzprodukt (Erfolgspaket) kaufen.' },
     ],
     compute(v) {
       const paidLeads = v.leadPrice > 0 ? round(v.adSpend / v.leadPrice) : 0;
@@ -50,10 +58,10 @@ const CALCULATORS = {
           { label: 'Erfolgspaket-Verkäufe', value: fmtNumber.format(salesErfolgspaket) },
         ],
         kpis: [
-          { label: 'Auftragsvolumen', value: fmtCurrency.format(auftragsvolumen), primary: true },
-          { label: 'Gewinn', value: fmtCurrency.format(gewinn), negative: gewinn < 0 },
-          { label: 'Cashflow (30%)', value: fmtCurrency.format(cashflow) },
-          { label: 'ROAS', value: `${roas.toLocaleString('de-DE', { maximumFractionDigits: 2 })}x` },
+          { label: 'Auftragsvolumen', value: fmtCurrency.format(auftragsvolumen), primary: true, help: 'Gesamter Umsatz aus High-Ticket-Sales, Erfolgspaket-Verkäufen und sonstigem Produktumsatz.' },
+          { label: 'Gewinn', value: fmtCurrency.format(gewinn), negative: gewinn < 0, help: 'Auftragsvolumen minus Ad-Spend. Weitere Kosten (z. B. Personal, Tools) sind hier nicht eingerechnet.' },
+          { label: 'Cashflow (30%)', value: fmtCurrency.format(cashflow), help: 'Angenommener sofort verfügbarer Cashflow-Anteil vom Auftragsvolumen (Richtwert: 30%).' },
+          { label: 'ROAS', value: `${roas.toLocaleString('de-DE', { maximumFractionDigits: 2 })}x`, help: 'Return on Ad Spend: Auftragsvolumen geteilt durch Ad-Spend. Zeigt, wie oft sich dein Werbebudget vervielfacht.' },
         ],
       };
     },
@@ -63,16 +71,16 @@ const CALCULATORS = {
     title: 'Webinar-Rechner',
     subtitle: 'Erstgespräche für High-Ticket',
     fields: [
-      { key: 'productPrice', label: 'Produkt-Preis (netto)', unit: '€', default: 2500 },
-      { key: 'adSpend', label: 'Ad-Spend', unit: '€', default: 5000 },
-      { key: 'leadPrice', label: 'Lead-Preis', unit: '€', default: 15, step: 0.5 },
-      { key: 'organicLeads', label: 'Organische Leads', unit: 'Leads', default: 50 },
+      { key: 'productPrice', label: 'Produkt-Preis (netto)', unit: '€', default: 2500, help: 'Der Netto-Verkaufspreis deines Haupt-Angebots (ohne MwSt.).' },
+      { key: 'adSpend', label: 'Ad-Spend', unit: '€', default: 5000, help: 'Dein gesamtes Werbebudget für dieses Webinar (z. B. Meta oder Google Ads).' },
+      { key: 'leadPrice', label: 'Lead-Preis', unit: '€', default: 15, step: 0.5, help: 'Was dich eine einzelne Anmeldung (Lead) im Schnitt kostet.' },
+      { key: 'organicLeads', label: 'Organische Leads', unit: 'Leads', default: 50, help: 'Anmeldungen ohne bezahlte Werbung, z. B. über E-Mail-Liste, Social Media oder Empfehlungen.' },
     ],
     rates: [
-      { key: 'showUpRate', label: 'Show-Up Rate', default: 0.30, benchmark: 0.35 },
-      { key: 'erstgesprächeRate', label: 'Erstgespräche-Quote', default: 0.15, benchmark: 0.15 },
-      { key: 'zweitgesprächeRate', label: 'Zweitgespräche-Quote', default: 0.30, benchmark: 0.30 },
-      { key: 'salesRate', label: 'Abschlussquote (Zweitgespräch → Sale)', default: 0.66, benchmark: 0.66 },
+      { key: 'showUpRate', label: 'Show-Up Rate', default: 0.30, benchmark: 0.35, help: 'Wie viel Prozent der angemeldeten Leads live im Webinar dabei sind.' },
+      { key: 'erstgesprächeRate', label: 'Erstgespräche-Quote', default: 0.15, benchmark: 0.15, help: 'Wie viel Prozent der Webinar-Teilnehmer sich für ein Erstgespräch eintragen.' },
+      { key: 'zweitgesprächeRate', label: 'Zweitgespräche-Quote', default: 0.30, benchmark: 0.30, help: 'Wie viel Prozent der Erstgespräche zu einem Zweitgespräch führen.' },
+      { key: 'salesRate', label: 'Abschlussquote (Zweitgespräch → Sale)', default: 0.66, benchmark: 0.66, help: 'Wie viel Prozent der Zweitgespräche zu einem Kauf führen.' },
     ],
     compute(v) {
       const paidLeads = v.leadPrice > 0 ? round(v.adSpend / v.leadPrice) : 0;
@@ -94,10 +102,10 @@ const CALCULATORS = {
           { label: 'Sales', value: fmtNumber.format(sales) },
         ],
         kpis: [
-          { label: 'Auftragsvolumen', value: fmtCurrency.format(auftragsvolumen), primary: true },
-          { label: 'Gewinn', value: fmtCurrency.format(gewinn), negative: gewinn < 0 },
-          { label: 'Cashflow (30%)', value: fmtCurrency.format(cashflow) },
-          { label: 'ROAS', value: `${roas.toLocaleString('de-DE', { maximumFractionDigits: 2 })}x` },
+          { label: 'Auftragsvolumen', value: fmtCurrency.format(auftragsvolumen), primary: true, help: 'Gesamter Umsatz aus allen High-Ticket-Sales.' },
+          { label: 'Gewinn', value: fmtCurrency.format(gewinn), negative: gewinn < 0, help: 'Auftragsvolumen minus Ad-Spend. Weitere Kosten (z. B. Personal, Tools) sind hier nicht eingerechnet.' },
+          { label: 'Cashflow (30%)', value: fmtCurrency.format(cashflow), help: 'Angenommener sofort verfügbarer Cashflow-Anteil vom Auftragsvolumen (Richtwert: 30%).' },
+          { label: 'ROAS', value: `${roas.toLocaleString('de-DE', { maximumFractionDigits: 2 })}x`, help: 'Return on Ad Spend: Auftragsvolumen geteilt durch Ad-Spend. Zeigt, wie oft sich dein Werbebudget vervielfacht.' },
         ],
       };
     },
@@ -107,14 +115,14 @@ const CALCULATORS = {
     title: 'Webinar-Rechner',
     subtitle: 'Sales über Bestellformular (Produkt unter 1.000 €)',
     fields: [
-      { key: 'productPrice', label: 'Produkt-Preis (netto)', unit: '€', default: 779 },
-      { key: 'adSpend', label: 'Ad-Spend', unit: '€', default: 5000 },
-      { key: 'leadPrice', label: 'Lead-Preis', unit: '€', default: 15, step: 0.5 },
-      { key: 'organicLeads', label: 'Organische Leads', unit: 'Leads', default: 100 },
+      { key: 'productPrice', label: 'Produkt-Preis (netto)', unit: '€', default: 779, help: 'Der Netto-Verkaufspreis deines Angebots (ohne MwSt.).' },
+      { key: 'adSpend', label: 'Ad-Spend', unit: '€', default: 5000, help: 'Dein gesamtes Werbebudget für dieses Webinar (z. B. Meta oder Google Ads).' },
+      { key: 'leadPrice', label: 'Lead-Preis', unit: '€', default: 15, step: 0.5, help: 'Was dich eine einzelne Anmeldung (Lead) im Schnitt kostet.' },
+      { key: 'organicLeads', label: 'Organische Leads', unit: 'Leads', default: 100, help: 'Anmeldungen ohne bezahlte Werbung, z. B. über E-Mail-Liste, Social Media oder Empfehlungen.' },
     ],
     rates: [
-      { key: 'showUpRate', label: 'Show-Up Rate', default: 0.30, benchmark: 0.30 },
-      { key: 'salesRate', label: 'Abschlussquote (Show-Up → Sale)', default: 0.10, benchmark: 0.10 },
+      { key: 'showUpRate', label: 'Show-Up Rate', default: 0.30, benchmark: 0.30, help: 'Wie viel Prozent der angemeldeten Leads live im Webinar dabei sind.' },
+      { key: 'salesRate', label: 'Abschlussquote (Show-Up → Sale)', default: 0.10, benchmark: 0.10, help: 'Wie viel Prozent der Webinar-Teilnehmer direkt über das Bestellformular kaufen.' },
     ],
     compute(v) {
       const paidLeads = v.leadPrice > 0 ? round(v.adSpend / v.leadPrice) : 0;
@@ -132,10 +140,10 @@ const CALCULATORS = {
           { label: 'Sales über Bestellformular', value: fmtNumber.format(sales) },
         ],
         kpis: [
-          { label: 'Auftragsvolumen', value: fmtCurrency.format(auftragsvolumen), primary: true },
-          { label: 'Gewinn', value: fmtCurrency.format(gewinn), negative: gewinn < 0 },
-          { label: 'Cashflow (30%)', value: fmtCurrency.format(cashflow) },
-          { label: 'ROAS', value: `${roas.toLocaleString('de-DE', { maximumFractionDigits: 2 })}x` },
+          { label: 'Auftragsvolumen', value: fmtCurrency.format(auftragsvolumen), primary: true, help: 'Gesamter Umsatz aus allen Verkäufen über das Bestellformular.' },
+          { label: 'Gewinn', value: fmtCurrency.format(gewinn), negative: gewinn < 0, help: 'Auftragsvolumen minus Ad-Spend. Weitere Kosten (z. B. Personal, Tools) sind hier nicht eingerechnet.' },
+          { label: 'Cashflow (30%)', value: fmtCurrency.format(cashflow), help: 'Angenommener sofort verfügbarer Cashflow-Anteil vom Auftragsvolumen (Richtwert: 30%).' },
+          { label: 'ROAS', value: `${roas.toLocaleString('de-DE', { maximumFractionDigits: 2 })}x`, help: 'Return on Ad Spend: Auftragsvolumen geteilt durch Ad-Spend. Zeigt, wie oft sich dein Werbebudget vervielfacht.' },
         ],
       };
     },
@@ -167,7 +175,7 @@ function renderCalc(calcKey) {
           <div class="fg-eyebrow"><span class="num">1</span>Deine Angaben</div>
           ${calc.fields.map(f => `
             <div class="field">
-              <label>${f.label}</label>
+              <label>${f.label} ${f.help ? infoBtn(f.help) : ''}</label>
               <div class="input-wrap">
                 <input type="number" step="${f.step || 1}" min="0" data-field="${f.key}" value="${v[f.key]}">
                 <span class="unit">${f.unit}</span>
@@ -180,7 +188,7 @@ function renderCalc(calcKey) {
           ${calc.rates.map(r => `
             <div class="rate-field">
               <div class="rate-top">
-                <label>${r.label}</label>
+                <label>${r.label} ${r.help ? infoBtn(r.help) : ''}</label>
                 <span class="rate-value" data-rate-display="${r.key}">${fmtPercent(v[r.key])}</span>
               </div>
               <input type="range" min="0" max="100" step="0.5" data-rate="${r.key}" value="${v[r.key] * 100}">
@@ -221,6 +229,7 @@ function renderCalc(calcKey) {
 }
 
 function update(calcKey) {
+  hideTooltip();
   const calc = CALCULATORS[calcKey];
   const result = calc.compute(state[calcKey]);
 
@@ -236,7 +245,7 @@ function update(calcKey) {
   const kpisEl = document.getElementById('kpis');
   kpisEl.innerHTML = result.kpis.map(kpi => `
     <div class="kpi ${kpi.primary ? 'primary' : ''}">
-      <div class="kpi-label">${kpi.label}</div>
+      <div class="kpi-label">${kpi.label} ${kpi.help ? infoBtn(kpi.help) : ''}</div>
       <div class="kpi-value ${kpi.negative ? 'negative' : ''}">${kpi.value}</div>
     </div>
   `).join('');
@@ -250,5 +259,57 @@ document.querySelectorAll('.fg-tab').forEach(tab => {
     renderCalc(activeCalc);
   });
 });
+
+// ---------- info tooltip (click-to-toggle, touch-friendly) ----------
+
+const tooltipEl = document.createElement('div');
+tooltipEl.className = 'fg-tooltip';
+document.body.appendChild(tooltipEl);
+let activeTipBtn = null;
+
+function showTooltip(btn) {
+  tooltipEl.textContent = btn.dataset.tip;
+  tooltipEl.classList.add('visible');
+  btn.classList.add('active');
+  activeTipBtn = btn;
+
+  const rect = btn.getBoundingClientRect();
+  tooltipEl.style.top = `${rect.bottom + 8}px`;
+  tooltipEl.style.left = `${rect.left}px`;
+
+  requestAnimationFrame(() => {
+    const tw = tooltipEl.offsetWidth;
+    const vw = window.innerWidth;
+    let left = rect.left;
+    if (left + tw > vw - 12) left = vw - tw - 12;
+    if (left < 12) left = 12;
+    tooltipEl.style.left = `${left}px`;
+  });
+}
+
+function hideTooltip() {
+  tooltipEl.classList.remove('visible');
+  if (activeTipBtn) activeTipBtn.classList.remove('active');
+  activeTipBtn = null;
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.fg-info-btn');
+  if (btn) {
+    e.stopPropagation();
+    if (activeTipBtn === btn) {
+      hideTooltip();
+    } else {
+      hideTooltip();
+      showTooltip(btn);
+    }
+    return;
+  }
+  if (!e.target.closest('.fg-tooltip')) hideTooltip();
+});
+
+window.addEventListener('scroll', hideTooltip, true);
+window.addEventListener('resize', hideTooltip);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideTooltip(); });
 
 renderCalc(activeCalc);
