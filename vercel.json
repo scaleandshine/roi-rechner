@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/roi-rechner", "destination": "/index.html" },
+    { "source": "/roi-rechner/:path*", "destination": "/:path*" }
+  ]
+}
