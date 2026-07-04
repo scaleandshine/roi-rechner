@@ -299,7 +299,7 @@ h1.fg em, h2.fg em {
   background: var(--fg-card-2);
   border: 1px solid var(--fg-border);
   color: var(--fg-text-strong);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   font-family: var(--fg-font-ui);
   border-radius: var(--fg-r-sm);
@@ -673,7 +673,7 @@ input[type="range"]::-moz-range-thumb {
 #kb-form input {
   width: 100%;
   font-family: var(--fg-font-ui);
-  font-size: 14.5px;
+  font-size: 16px;
   padding: 13px 14px;
   border-radius: var(--fg-r-sm);
   border: 1px solid var(--fg-border);
