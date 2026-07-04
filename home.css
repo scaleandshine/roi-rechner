@@ -180,12 +180,11 @@ html, body {
   text-align: left;
 }
 
-.hp-freebie-mock {
-  font-size: 30px;
-  text-align: center;
-  background: rgba(255,255,255,.15);
+.hp-freebie-mock-img {
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: 10px;
-  padding: 14px 0;
   margin-bottom: 10px;
 }
 
@@ -244,15 +243,11 @@ html, body {
   margin: 0 0 16px;
 }
 
-.hp-tool-logo {
-  font-family: var(--hp-font-display);
-  font-weight: 700;
-  font-size: 20px;
-  margin-bottom: 16px;
-  background: var(--hp-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.hp-tool-logo-img {
+  display: block;
+  height: 32px;
+  width: auto;
+  margin: 0 auto 16px;
 }
 
 /* ---------- divider ---------- */
@@ -285,80 +280,20 @@ html, body {
   margin: 4px 0 24px;
 }
 
-/* ---------- trust ring ---------- */
+/* ---------- trust stats ---------- */
 
 .hp-trust {
   text-align: center;
   margin-bottom: 24px;
 }
 
-.hp-trust-badges {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.hp-trust-badges span {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--hp-text-muted);
-  background: #fff;
-  border: 1px solid var(--hp-border);
-  border-radius: var(--hp-radius-pill);
-  padding: 5px 10px;
-}
-
-.hp-trust-ring {
-  position: relative;
-  width: 200px;
-  height: 200px;
+.hp-trust-img {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
   margin: 0 auto;
 }
-
-.hp-trust-photo {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  object-fit: cover;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 8px 24px rgba(183,19,174,.30);
-}
-
-.hp-stat {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background: var(--hp-gradient);
-  color: #fff;
-  font-family: var(--hp-font-display);
-  font-weight: 700;
-  font-size: 14px;
-  box-shadow: 0 4px 14px rgba(89,34,152,.30);
-  text-align: center;
-}
-
-.hp-stat small {
-  font-family: var(--hp-font-ui);
-  font-weight: 600;
-  font-size: 8px;
-  line-height: 1.2;
-  margin-top: 2px;
-}
-
-.hp-stat-tl { top: -10px; left: -10px; }
-.hp-stat-tr { top: -10px; right: -10px; }
-.hp-stat-bl { bottom: -10px; left: -10px; }
-.hp-stat-br { bottom: -10px; right: -10px; }
 
 /* ---------- booking form ---------- */
 
