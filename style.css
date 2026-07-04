@@ -663,11 +663,20 @@ input[type="range"]::-moz-range-thumb {
 
 .fg-tooltip.visible { display: block; }
 
+/* ---------- disclaimer (under calculator) ---------- */
+
+.fg-disclaimer {
+  text-align: center;
+  color: var(--fg-text-faint);
+  font-size: 12px;
+  margin: 20px 0 0;
+}
+
 /* ---------- footer ---------- */
 
 .fg-footer {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 32px;
 }
 
 .fg-footer p {
