@@ -313,3 +313,59 @@ window.addEventListener('resize', hideTooltip);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideTooltip(); });
 
 renderCalc(activeCalc);
+
+// ---------- Knowledge-Base Opt-in ----------
+
+// TODO: Apps-Script-Web-App-URL eintragen, sobald deployed (endet auf /exec)
+const KB_WEBHOOK_URL = 'PASTE_APPS_SCRIPT_URL_HERE';
+const KB_NOTION_URL = 'https://towering-piano-a3a.notion.site/Optimierungs-Sheet-f-r-Workshops-Webinare-7dd961cf9e1744c7b50d8f29b424ab4e';
+
+const kbUnlockBtn = document.getElementById('kb-unlock-btn');
+const kbModalOverlay = document.getElementById('kb-modal-overlay');
+const kbModalClose = document.getElementById('kb-modal-close');
+const kbForm = document.getElementById('kb-form');
+const kbSubmitBtn = document.getElementById('kb-submit-btn');
+const kbError = document.getElementById('kb-error');
+
+function openKbModal() {
+  kbModalOverlay.hidden = false;
+  document.getElementById('kb-vorname').focus();
+}
+
+function closeKbModal() {
+  kbModalOverlay.hidden = true;
+  kbError.hidden = true;
+}
+
+kbUnlockBtn.addEventListener('click', openKbModal);
+kbModalClose.addEventListener('click', closeKbModal);
+kbModalOverlay.addEventListener('click', (e) => {
+  if (e.target === kbModalOverlay) closeKbModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !kbModalOverlay.hidden) closeKbModal();
+});
+
+kbForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  kbError.hidden = true;
+  const vorname = document.getElementById('kb-vorname').value.trim();
+  const email = document.getElementById('kb-email').value.trim();
+
+  kbSubmitBtn.disabled = true;
+  kbSubmitBtn.textContent = 'Wird freigeschaltet …';
+
+  fetch(KB_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // vermeidet CORS-Preflight bei Apps Script
+    body: JSON.stringify({ vorname, email }),
+  })
+    .catch(() => {}) // Apps Script liefert bei "Anyone"-Deploys oft keine auswertbare Antwort – wir vertrauen auf den Request statt die Response zu prüfen.
+    .finally(() => {
+      window.open(KB_NOTION_URL, '_blank', 'noopener');
+      closeKbModal();
+      kbSubmitBtn.disabled = false;
+      kbSubmitBtn.textContent = 'Freischalten →';
+      kbForm.reset();
+    });
+});
