@@ -158,13 +158,13 @@ function renderCalc(calcKey) {
 
   app.innerHTML = `
     <div class="calc-head">
-      <h1>${calc.title}</h1>
+      <h2>${calc.title}</h2>
       <p>${calc.subtitle}</p>
     </div>
     <div class="grid">
       <div class="col-inputs">
         <div class="card">
-          <h2><span class="dot"></span>Deine Angaben</h2>
+          <div class="fg-eyebrow"><span class="num">1</span>Deine Angaben</div>
           ${calc.fields.map(f => `
             <div class="field">
               <label>${f.label}</label>
@@ -176,7 +176,7 @@ function renderCalc(calcKey) {
           `).join('')}
         </div>
         <div class="card">
-          <h2><span class="dot"></span>Performance-Annahmen</h2>
+          <div class="fg-eyebrow"><span class="num">2</span>Performance-Annahmen</div>
           ${calc.rates.map(r => `
             <div class="rate-field">
               <div class="rate-top">
@@ -191,7 +191,7 @@ function renderCalc(calcKey) {
       </div>
       <div class="col-results">
         <div class="card">
-          <h2><span class="dot"></span>Dein Funnel</h2>
+          <div class="fg-eyebrow"><span class="num">3</span>Dein Funnel</div>
           <div class="funnel" id="funnel"></div>
         </div>
         <div class="kpis" id="kpis"></div>
@@ -242,9 +242,9 @@ function update(calcKey) {
   `).join('');
 }
 
-document.querySelectorAll('.tab').forEach(tab => {
+document.querySelectorAll('.fg-tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.fg-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     activeCalc = tab.dataset.calc;
     renderCalc(activeCalc);

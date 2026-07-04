@@ -3,44 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ROI-Rechner – Workshop &amp; Webinar</title>
+<title>ROI-Rechner – Funnelguru</title>
+<meta name="description" content="Zeig live, was dein Funnel unterm Strich bringt — Workshop- und Webinar-Rechner im Funnelguru-Design.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="bg-glow"></div>
+<div class="fg-bg-glow"></div>
 
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-mark">ROI</span>
-    <span class="brand-text">Rechner</span>
-  </div>
-  <p class="brand-sub">Zeig deinem Kunden live, was in seinem Funnel unterm Strich rauskommt.</p>
-</header>
+<div class="fg-wrap">
 
-<nav class="tabs" id="tabs">
-  <button class="tab active" data-calc="workshop">
-    <span class="tab-title">Workshop-Rechner</span>
-    <span class="tab-desc">High-Ticket-Sales (mind. 2 Tage)</span>
-  </button>
-  <button class="tab" data-calc="webinarTermine">
-    <span class="tab-title">Webinar-Rechner</span>
-    <span class="tab-desc">Erstgespräche für High-Ticket</span>
-  </button>
-  <button class="tab" data-calc="webinarBestellformular">
-    <span class="tab-title">Webinar-Rechner</span>
-    <span class="tab-desc">Sales über Bestellformular</span>
-  </button>
-</nav>
+  <header class="fg-header">
+    <div class="fg-pre-pill">👉 Für dein nächstes Kundengespräch</div>
+    <h1 class="fg">Was <em>wirklich</em> rauskommt, wenn du diesen Funnel fährst.</h1>
+    <p class="fg-lede">Trag die Zahlen deines Kunden ein, zieh an den Reglern — Auftragsvolumen, Gewinn und ROAS aktualisieren sich live.</p>
+  </header>
 
-<main class="app" id="app"></main>
+  <nav class="fg-tabs" id="tabs">
+    <button class="fg-tab active" data-calc="workshop">
+      <span class="fg-tab-title">Workshop-Rechner</span>
+      <span class="fg-tab-desc">High-Ticket-Sales (mind. 2 Tage)</span>
+    </button>
+    <button class="fg-tab" data-calc="webinarTermine">
+      <span class="fg-tab-title">Webinar-Rechner</span>
+      <span class="fg-tab-desc">Erstgespräche für High-Ticket</span>
+    </button>
+    <button class="fg-tab" data-calc="webinarBestellformular">
+      <span class="fg-tab-title">Webinar-Rechner</span>
+      <span class="fg-tab-desc">Sales über Bestellformular</span>
+    </button>
+  </nav>
 
-<footer class="footer">
-  <p>Unverbindliche Hochrechnung auf Basis deiner Angaben &amp; Branchen-Benchmarks. Kein Ersatz für eine individuelle Beratung.</p>
-</footer>
+  <main id="app"></main>
+
+  <footer class="fg-footer">
+    <p>ℹ️ Unverbindliche Hochrechnung auf Basis deiner Angaben &amp; Branchen-Benchmarks · Kein Ersatz für eine individuelle Beratung · Funnelguru</p>
+  </footer>
+
+</div>
 
 <script src="script.js"></script>
 </body>
