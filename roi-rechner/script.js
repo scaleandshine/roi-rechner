@@ -317,6 +317,7 @@ renderCalc(activeCalc);
 // ---------- Knowledge-Base Opt-in ----------
 
 const KB_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxxQ4sAikTmFebbJFCN9A6O8jAAkIIMXg4R7qSOlnHPcrDvdPNE_zVSeS15otYwnNfP/exec';
+const KB_LEAD_API_URL = 'https://dashboard.scaleandshine.de/api/roi-rechner/lead';
 const KB_DESTINATION_URL = '/roi-rechner/optimierung';
 
 const kbUnlockBtn = document.getElementById('kb-unlock-btn');
@@ -358,13 +359,17 @@ kbForm.addEventListener('submit', (e) => {
     posthog.capture('lead_submitted', { source: 'knowledge_base_optin' });
   }
 
-  fetch(KB_WEBHOOK_URL, {
+  const body = JSON.stringify({ vorname, email });
+  const opts = {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // vermeidet CORS-Preflight bei Apps Script
-    body: JSON.stringify({ vorname, email }),
-  })
-    .catch(() => {}) // Apps Script liefert bei "Anyone"-Deploys oft keine auswertbare Antwort – wir vertrauen auf den Request statt die Response zu prüfen.
-    .finally(() => {
-      window.location.href = KB_DESTINATION_URL;
-    });
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // vermeidet CORS-Preflight
+    body,
+  };
+
+  // Google Sheet (Backup-Log) + Dashboard-API (Lead speichern, Knowledgebase-Mail an den Lead,
+  // Benachrichtigung an leads@fityourbusiness.de) parallel anstoßen. Antworten sind fire-and-forget –
+  // die Freischaltung der Seite hängt nicht von ihnen ab.
+  Promise.allSettled([fetch(KB_WEBHOOK_URL, opts), fetch(KB_LEAD_API_URL, opts)]).finally(() => {
+    window.location.href = KB_DESTINATION_URL;
+  });
 });
