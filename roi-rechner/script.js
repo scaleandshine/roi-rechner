@@ -354,6 +354,10 @@ kbForm.addEventListener('submit', (e) => {
   kbSubmitBtn.disabled = true;
   kbSubmitBtn.textContent = 'Wird freigeschaltet …';
 
+  if (window.posthog) {
+    posthog.capture('lead_submitted', { source: 'knowledge_base_optin' });
+  }
+
   fetch(KB_WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // vermeidet CORS-Preflight bei Apps Script
