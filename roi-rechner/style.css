@@ -699,6 +699,17 @@ input[type="range"]::-moz-range-thumb {
   color: var(--fg-text-faint);
 }
 
+.fg-trustbadges {
+  margin: 22px auto 0;
+  max-width: 460px;
+}
+
+.fg-trustbadges img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .fg-signature {
   display: flex;
   align-items: center;
